@@ -5,3 +5,19 @@
 {% block content %}
 <h1>contact</h1>
 {% endblock content %}
+{% block pages %}                 
+<li class="nav-item">
+<a class="nav-link" href="{% url 'website:index' %}">صفحه اصلی</a>
+</li>
+
+                       
+<li class="nav-item">
+    <a class="nav-link " href="{% url 'shop:product-grid' %}">لیست محصولات</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link " href="{% url 'website:about' %}">درباره ما</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" href="{% url 'website:contact' %}">ارتباط با ما</a>
+</li>
+{% endblock pages %} 

@@ -69,6 +69,7 @@ class CustomUserAdmin(UserAdmin):
 class CustomProfileAdmin(admin.ModelAdmin):
     list_display = ("id","user", "first_name","last_name","phone_number")
     search_fields = ("user__id", "user__email", "first_name", "last_name", "phone_number")
+    ordering = ("-id",)
 
 
 admin.site.register(Profile,CustomProfileAdmin)
