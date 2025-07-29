@@ -64,7 +64,15 @@
                 <!-- Navbar Collapse -->
                 <div id="navbarVerticalNavMenu" class="collapse navbar-collapse">
                     <form action="." class="w-100">
-
+                        <div class="border-bottom pb-4 mb-4">
+                            <h5>جستو جوی کالا</h5>
+                            <div class="d-grid gap-2">
+                                <div class="form-group">
+                                    <label class="form-label d-flex" for="searchQuery">جستو جوی</label>
+                                    <input class="form-control" placeholder="واژه مورد نظر را وارد نمایید" type="text" name="q" id="searchQuery">
+                                </div>
+                            </div>
+                        </div>
                         <div class="border-bottom pb-4 mb-4">
                             <h5>قیمت</h5>
                             <div class="d-grid gap-2">
@@ -79,7 +87,34 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="border-bottom pb-4 mb-4">
+                            <h5>دسته بندی</h5>
+                            <div class="d-grid gap-2">
+                                <div class="mb-2 mb-sm-0 me-sm-2">
+                                    <select class="form-select form-select-sm" name="category_id">
+                                        <option value="" selected>انتخاب دسته بندی</option>
+                                        {% for category in categories %}
+                                        <option value="{{category.id}}">{{category.title}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom pb-4 mb-4">
+                            <h5>تعداد در صفحه</h5>
+                            <div class="d-grid gap-2">
+                                <div class="mb-2 mb-sm-0 me-sm-2">
+                                    <select class="form-select form-select-sm" name="page_size">
+                                        <option value="" selected>تعداد در صفحه</option>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-white btn-transition">اعمال فیلتر</button>
                         </div>
@@ -112,7 +147,7 @@
                         <!-- End Select -->
                         <!-- Select -->
                         <div class="mb-2 mb-sm-0 me-sm-2">
-                            <select class="form-select form-select-sm">
+                            <select class="form-select form-select-sm" name="page_size">
                                 <option value="" selected>تعداد در صفحه</option>
                                 <option value="">10</option>
                                 <option value="">20</option>
@@ -204,6 +239,10 @@
                         </div>
                     </div>
                     <!-- End Card -->
+                </div>
+                {% empty %}
+                <div class="row text-center w-100 py-5">
+                    <p class="text-center">هیچ کالایی برای نمایش وجود ندارد</p>
                 </div>
                 <!-- End Col -->
                 {% endfor %}
