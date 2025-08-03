@@ -22,6 +22,7 @@
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{% static 'css/theme.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
     {% block extra_css %} {% endblock extra_css %}
 
@@ -454,6 +455,16 @@
                 }
             });
         }
+        function formatPriceInToman(element) {
+            let rawPrice = parseFloat(element.innerText);
+            let formatter = new Intl.NumberFormat('fa-IR');
+            let formattedPrice = formatter.format(rawPrice);
+            element.innerText = `${formattedPrice} تومان`;
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            let priceElements = document.querySelectorAll('.formatted-price');
+            priceElements.forEach(element => formatPriceInToman(element));
+        });
     </script>
 
     <!-- JS Plugins Init. -->
