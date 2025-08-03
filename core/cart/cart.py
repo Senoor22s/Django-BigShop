@@ -34,3 +34,9 @@ class CartSession:
 
     def get_cart_dict(self):
         return self._cart
+    
+    def get_total_quantity(self):
+        total_quantiy = 0
+        for item in self._cart["items"]:
+            total_quantiy += item["quantity"]
+        return  total_quantiy
