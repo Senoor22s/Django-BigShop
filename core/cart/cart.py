@@ -31,3 +31,6 @@ class CartSession:
 
     def save(self):
         self.session.modified = True
+
+    def get_cart_dict(self):
+        return self._cart

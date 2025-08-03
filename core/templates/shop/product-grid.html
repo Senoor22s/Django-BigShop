@@ -218,7 +218,7 @@
                             <!-- End Rating -->
 
                             <button type="button"
-                                class="btn btn-outline-primary btn-sm btn-transition rounded-pill">افزودن به سبد
+                                class="btn btn-outline-primary btn-sm btn-transition rounded-pill" onclick="addToCart('{{object.id}}')">افزودن به سبد
                                 خرید</button>
                             <button type="button"
                                 class="btn btn-outline-primary btn-sm btn-transition rounded-pill"><a href="{% url 'shop:product-detail' slug=object.slug %}">مشاهده محصول</a></button>
@@ -389,6 +389,27 @@
         window.location.href = new_url
     }
 </script>
+<script>
+    function addToCart(product_id) {
+        console.log(product_id)
+        $.ajax({
+            url: "{%  url 'cart:session-add-product' %}",
+            method: 'POST',
+            data: {
+                product_id: product_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+
+            },
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
+    }
+</script>
+
 {% endblock extra_js %}
 {% block pages %}                 
 <li class="nav-item">

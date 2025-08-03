@@ -3,4 +3,6 @@ from . import views
 
 app_name = "cart"
 
-urlpatterns = []
+urlpatterns = [
+    path("session/add-product/",views.SessionAddProduct.as_view(),name="session-add-product")
+]
