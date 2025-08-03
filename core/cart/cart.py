@@ -1,3 +1,5 @@
+from shop.models import ProductModel,ProductStatusType
+
 class CartSession:
     def __init__(self, session):
         self.session = session
@@ -35,8 +37,22 @@ class CartSession:
     def get_cart_dict(self):
         return self._cart
     
+    def get_total_payment_amount(self):
+        total = 0
+        for item in self._cart["items"]:
+            product_obj = ProductModel.objects.get(id=item["product_id"], status=ProductStatusType.publish.value)
+            total += item["quantity"] * product_obj.get_discounted_price()
+        return total
+
     def get_total_quantity(self):
         total_quantiy = 0
         for item in self._cart["items"]:
             total_quantiy += item["quantity"]
         return  total_quantiy
+    
+    def get_cart_items(self):
+        for item in self._cart["items"]:
+            product_obj = ProductModel.objects.get(id=item["product_id"], status=ProductStatusType.publish.value)
+            item.update({"product_obj": product_obj, "total_price": item["quantity"] * product_obj.get_discounted_price()})
+
+        return self._cart["items"]
