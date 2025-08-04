@@ -56,3 +56,21 @@ class CartSession:
             item.update({"product_obj": product_obj, "total_price": item["quantity"] * product_obj.get_discounted_price()})
 
         return self._cart["items"]
+    
+    def update_product_quantity(self,product_id,quantity):
+        for item in self._cart["items"]:
+            if product_id == item["product_id"]:
+                item["quantity"] = int(quantity)
+                break
+        else:
+            return
+        self.save()
+
+    def remove_product(self,product_id):
+        for item in self._cart["items"]:
+            if product_id == item["product_id"]:
+                self._cart["items"].remove(item)
+                break
+        else:
+            return
+        self.save()

@@ -53,28 +53,27 @@
                                                 <div class="d-flex align-items-center">
                                                     <span class="h6 ms-3">تعداد:</span>
                                                     <!-- Select -->
-                                                    <select class="form-select form-select-sm mb-3">
-                                                        {% with ''|center:item.product_obj.stock as range %}
-                                                        {% for _ in range %}
-                                                        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                                                        {% endfor %}
-                                                        {% endwith %}
-                                                 
-                                                        
-                                                    </select>
+                                                    <select class="form-select form-select-sm mb-3"
+                                                    onchange="changeProductQuantity('{{item.product_id}}',this.value)">
+                                                    {% with ''|center:item.product_obj.stock as range %}
+                                                    {% for _ in range %}
+                                                    <option value="{{ forloop.counter }}" 
+                                                    {% if forloop.counter == item.quantity %} selected {% endif %}>
+                                                        {{ forloop.counter }}</option>
+                                                    {% endfor %}
+                                                    {% endwith %}
+                                                </select>
                                                 </div>
                                                 <!-- End Select -->
                                             </div>
-
                                             <div class="col-auto ">
-                                                <div class="d-grid gap-2 d-flex justify-content-between">
-                                                    <a class="link-sm link-danger small" href="javascript:;">
-                                                        <i class="bi-trash me-1"></i> حذف
-                                                    </a>
-                                                    <a class="link-sm link-secondary small" href="javascript:;">
-                                                        <i class="bi-heart-fill ms-1 "></i> علایق
-                                                      </a>
-                                                </div>
+                                            <div class="d-grid gap-2 d-flex justify-content-between">
+                                                <button class=" btn btn-sm btn-icon text-danger border-0 mx-1" onclick="removeProduct('{{item.product_id}}')">
+                                                    <i class="bi-trash ms-1"></i> حذف
+                                                </button>
+                                                <button class=" btn btn-sm btn-icon text-secondary border-0 mx-1" >
+                                                    <i class="bi-heart-fill ms-1 "></i> علایق
+                                                </button>
                                             </div>
                                             <!-- End Col -->
                                         </div>
