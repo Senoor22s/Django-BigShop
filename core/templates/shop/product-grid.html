@@ -169,13 +169,14 @@
                     <div class="card card-bordered shadow-none text-center h-100">
                         <div class="card-pinned">
                             <img class="card-img-top" src="{{object.image.url}}" alt="Image Description">
-
+                            {% if request.user.is_authenticated %}
                             <div class="card-pinned-top-end">
                                 <button type="button" class="btn btn-outline-secondary btn-xs btn-icon rounded-circle"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به علایق">
                                     <i class="bi-heart"></i>
                                 </button>
                             </div>
+                            {% endif %}
                         </div>
 
                         <div class="card-body">
@@ -383,19 +384,3 @@
 </script>
 
 {% endblock extra_js %}
-{% block pages %}                 
-<li class="nav-item">
-<a class="nav-link" href="{% url 'website:index' %}">صفحه اصلی</a>
-</li>
-
-                       
-<li class="nav-item">
-    <a class="nav-link active" href="{% url 'shop:product-grid' %}">لیست محصولات</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link " href="{% url 'website:about' %}">درباره ما</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link " href="{% url 'website:contact' %}">ارتباط با ما</a>
-</li>
-{% endblock pages %} 
