@@ -3,6 +3,7 @@ from django.views.generic import View,TemplateView
 from django.http import JsonResponse
 from .cart import CartSession
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 
 
 class SessionAddProduct(View):
@@ -19,7 +20,7 @@ class SessionCartSummary(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect('/accounts/login/')
+            return redirect(reverse_lazy('accounts:login'))
         return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
