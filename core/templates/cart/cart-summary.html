@@ -1,132 +1,114 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block content %}
 <!-- ========== MAIN CONTENT ========== -->
 <main id="content" role="main">
-    <!-- Content -->
     <div class="container content-space-3 content-space-lg-5">
         <div class="row">
+            <!-- سبد خرید -->
             <div class="col-lg-8 mb-7 mb-lg-0">
                 <!-- Heading -->
                 <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-7">
                     <h1 class="h3 mb-0">سبد خرید</h1>
-                    <span>{{total_quantity}}مورد</span>
+                    <span>{{ total_quantity }} مورد</span>
                 </div>
-                <!-- End Heading -->
 
-
-                <!-- List Group -->
+                <!-- لیست کالاها -->
                 <ul class="list-group list-group-flush list-group-no-gutters mb-5">
                     {% for item in cart_items %}
-                    <!-- Item -->
                     <li class="list-group-item">
-                        <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <!-- تصویر محصول -->
                             <div class="flex-shrink-0">
-                                <img class="avatar avatar-xl avatar-4x3" src="{{item.product_obj.image.url}}"
-                                    alt="Image Description">
+                                <a href="{% url 'shop:product-detail' slug=item.product_obj.slug %}"><img class="avatar avatar-xl avatar-4x3" src="{{ item.product_obj.image.url }}" alt="Image Description"></a>
                             </div>
 
+                            <!-- اطلاعات محصول -->
                             <div class="flex-grow-1 ms-3">
-                                <div class="row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <h5><a class="text-dark" href="{% url 'shop:product-detail' slug=item.product_obj.slug %}">{{item.product_obj.title}}</a></h5>
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                    <div class="me-3" style="min-width: 200px;">
+                                        <h5>{{ item.product_obj.title }}</h5>
 
                                         <div class="d-block d-sm-none">
-                                            <h5 class="mb-1 formatted-price">{{item.total_price}}</h5>
+                                            <span class="formatted-price">{{ item.total_price }}</span>
                                         </div>
 
-                                        <div class="d-grid gap-1">
-                                            <div class="text-body">
-                                                <span class="small">دسته بندی:</span>
-                                                <span class="fw-semibold small">{% for category in item.product_obj.category.all %} <a href="#">{{category.title}} </a>{% if not forloop.last %} ,{% endif %}
-                                                    {% endfor %}</span>
-                                            </div>
+                                        <div class="text-body small">
+                                            <span>دسته بندی:</span>
+                                            <span class="fw-semibold">
+                                                {% for category in item.product_obj.category.all %}
+                                                    <a href="{% url 'shop:product-grid' %}?category_id={{ category.id }}">{{ category.title }}</a>{% if not forloop.last %} ,{% endif %}
+                                                {% endfor %}
+                                            </span>
                                         </div>
                                     </div>
-                                    <!-- End Col -->
 
-                                    <div class="col-sm-4">
-                                        <div class="row">
-                                            <div class="col-auto">
-                                                <div class="d-flex align-items-center">
-                                                    <span class="h6 ms-3">تعداد:</span>
-                                                    <!-- Select -->
-                                                    <select class="form-select form-select-sm mb-3"
-                                                    onchange="changeProductQuantity('{{item.product_id}}',this.value)">
-                                                    {% with ''|center:item.product_obj.stock as range %}
-                                                    {% for _ in range %}
-                                                    <option value="{{ forloop.counter }}" 
-                                                    {% if forloop.counter == item.quantity %} selected {% endif %}>
-                                                        {{ forloop.counter }}</option>
-                                                    {% endfor %}
-                                                    {% endwith %}
-                                                </select>
-                                                </div>
-                                                <!-- End Select -->
-                                            </div>
-                                            <div class="col-auto ">
-                                            <div class="d-grid gap-2 d-flex justify-content-between">
-                                                <button class=" btn btn-sm btn-icon text-danger border-0 mx-1" onclick="removeProduct('{{item.product_id}}')">
-                                                    <i class="bi-trash ms-1"></i> حذف
-                                                </button>
-                                                <button class=" btn btn-sm btn-icon text-secondary border-0 mx-1" >
-                                                    <i class="bi-heart-fill ms-1 "></i> علایق
-                                                </button>
-                                            </div>
-                                            <!-- End Col -->
+                                    <!-- تعداد و دکمه‌ها -->
+                                    <div class="d-flex flex-column align-items-end">
+                                        <div class="mb-2">
+                                            <span class="h6 me-2">تعداد:</span>
+                                            <select class="form-select form-select-sm" onchange="changeProductQuantity('{{ item.product_id }}', this.value)">
+                                                {% with ''|center:item.product_obj.stock as range %}
+                                                {% for _ in range %}
+                                                    <option value="{{ forloop.counter }}" {% if forloop.counter == item.quantity %} selected {% endif %}>
+                                                        {{ forloop.counter }}
+                                                    </option>
+                                                {% endfor %}
+                                                {% endwith %}
+                                            </select>
                                         </div>
-                                        <!-- End Row -->
-                                    </div>
-                                    <!-- End Col -->
 
-                                    <div class="col-4 col-sm-2 d-none d-sm-inline-block text-right">
-                                        <span class="h5 d-block mb-1 formatted-price">{{item.total_price}}</span>
+                                        <div class="d-flex gap-3">
+                                            <button class="btn btn-sm btn-icon text-danger border-0" onclick="removeProduct('{{ item.product_id }}')">
+                                                <i class="bi-trash ms-1"></i> حذف
+                                            </button>
+                                            <button class="btn btn-sm btn-icon text-secondary border-0">
+                                                <i class="bi-heart-fill ms-1"></i> علایق
+                                            </button>
+                                        </div>
                                     </div>
-                                    <!-- End Col -->
+
+                                    <!-- قیمت محصول -->
+                                    <div class="ms-3 d-flex align-items-center">
+                                        <span class="h5 formatted-price">{{ item.total_price }}</span>
+                                    </div>
                                 </div>
-                                <!-- End Row -->
                             </div>
                         </div>
                     </li>
-                    <!-- End Item -->
+                    {% empty %}
+                    <div class="row text-center w-100 py-5">
+                        <p class="text-center">هیچ کالایی برای نمایش وجود ندارد</p>
+                    </div>
                     {% endfor %}
-
                 </ul>
-                <!-- End List Group -->
 
                 <div class="d-sm-flex justify-content-end">
                     <a class="link" href="{% url 'shop:product-grid' %}">
                         به خرید ادامه دهید <i class="bi-chevron-left small ms-1"></i>
                     </a>
                 </div>
-
-                <!-- End Form -->
             </div>
-            <!-- End Col -->
 
+            <!-- خلاصه هزینه -->
             <div class="col-lg-4">
                 <div class="ps-lg-4">
-                    <!-- Card -->
                     <div class="card card-sm shadow-sm mb-4">
                         <div class="card-body">
                             <div class="border-bottom pb-4 mb-4">
                                 <h3 class="card-header-title">خلاصه هزینه</h3>
                             </div>
                             <form>
-
                                 <div class="d-grid gap-3 mb-4">
                                     <dl class="row">
                                         <dt class="col-sm-6">مالیات</dt>
                                         <dd class="col-sm-12 text-sm-end mb-0">به همراه 9% در هنگام پرداخت</dd>
                                     </dl>
-                                    <!-- End Row -->
-
                                     <dl class="row">
                                         <dt class="col-sm-6">جمع</dt>
-                                        <dd class="col-sm-12 text-sm-end mb-0 formatted-price">{{total_payment_price}}
-                                    <!-- End Row -->
+                                        <dd class="col-sm-12 text-sm-end mb-0 formatted-price">{{ total_payment_price }}</dd>
+                                    </dl>
                                 </div>
 
                                 <div class="d-grid">
@@ -134,10 +116,9 @@
                                 </div>
                             </form>
                         </div>
-                        <!-- End Card -->
                     </div>
 
-                    <!-- Media -->
+                    <!-- پشتیبانی -->
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
                             <div class="svg-icon svg-icon-sm text-primary">
@@ -150,7 +131,6 @@
                                         d="M1.98508 18V13C1.98508 11.8954 2.88051 11 3.98508 11H11.9851C13.0896 11 13.9851 11.8954 13.9851 13V18C13.9851 19.1046 13.0896 20 11.9851 20H4.10081L2.85695 21.1905C2.53895 21.4949 2.01123 21.2695 2.01123 20.8293V18.3243C1.99402 18.2187 1.98508 18.1104 1.98508 18ZM5.99999 14.5C5.99999 14.2239 6.22385 14 6.49999 14H11.5C11.7761 14 12 14.2239 12 14.5C12 14.7761 11.7761 15 11.5 15H6.49999C6.22385 15 5.99999 14.7761 5.99999 14.5ZM9.49999 16C9.22385 16 8.99999 16.2239 8.99999 16.5C8.99999 16.7761 9.22385 17 9.49999 17H11.5C11.7761 17 12 16.7761 12 16.5C12 16.2239 11.7761 16 11.5 16H9.49999Z"
                                         fill="#035A4B" />
                                 </svg>
-
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-2">
@@ -158,13 +138,9 @@
                             <a class="link small" href="#">ارسال تیکت</a>
                         </div>
                     </div>
-                    <!-- End Media -->
                 </div>
             </div>
-            <!-- End Col -->
         </div>
-        <!-- End Row -->
     </div>
-    <!-- End Content -->
 </main>
 {% endblock %}

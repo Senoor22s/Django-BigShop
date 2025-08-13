@@ -81,11 +81,11 @@
                 <span class="d-block mb-2">قیمت کل:</span>
                 {% if object.is_discounted %}
                 <div class="d-flex align-items-center">
-                    <h3 class="mb-0">{{object.get_show_price}} تومان</h3>
-                    <span class="ms-2"><del>{{object.get_show_raw_price}} تومان</del></span>
+                    <h3 class="card-text text-dark fs-4">{{ object.get_show_price }} تومان</h3>
+                    <span class="text-danger me-1 fs-6 "><del>{{ object.get_show_raw_price }} تومان</del></span>
                 </div>
                 {% else %}
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center ">
                     <h3 class="mb-0">{{object.get_show_price}} تومان</h3>
                 </div>
                 {% endif %}
@@ -199,7 +199,19 @@
             <!-- End Accordion -->
 
             <div class="d-grid mb-4">
-                <button type="button" class="btn btn-primary btntransition" onclick="addToCart('{{object.id}}')">افزودن به سبد خرید</button>
+                {% if request.user.is_authenticated %}
+                    <button type="button"
+                        class="btn btn-primary btntransition"
+                        onclick="addToCart('{{ object.id }}')">
+                        افزودن به سبد خرید
+                    </button>
+                {% else %}
+                    <button type="button"
+                        class="btn btn-primary btntransition"
+                        onclick="window.location.href='{% url "accounts:login" %}'">
+                        افزودن به سبد خرید
+                    </button>
+                {% endif %}
             </div>
 
             <!-- Media -->

@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views.generic import View,TemplateView
 from django.http import JsonResponse
 from .cart import CartSession
+from django.shortcuts import redirect
+
 
 class SessionAddProduct(View):
     
@@ -15,6 +17,11 @@ class SessionAddProduct(View):
 class SessionCartSummary(TemplateView):
     template_name = "cart/cart-summary.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/accounts/login/')
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         cart = CartSession(self.request.session)
