@@ -6,6 +6,8 @@ from dashboard.admin.forms import AdminPasswordChangeForm,AdminProfileEditForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from accounts.models import Profile
+from django.shortcuts import redirect
+from django.contrib import messages
 
 class AdminDashboardHomeView(LoginRequiredMixin,HasAdminAccessPermission,TemplateView):
     template_name = "dashboard/admin/home.html"
@@ -25,6 +27,23 @@ class AdminProfileEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessM
     
     def get_object(self, queryset=None):
         return Profile.objects.get(user=self.request.user)
+
+
+class AdminProfileImageEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin,UpdateView):
+    http_method_names=["post"]
+    model = Profile
+    fields= [
+        "image"
+    ]
+    success_url = reverse_lazy("dashboard:admin:profile-edit")
+    success_message = "بروز رسانی تصویر پروفایل با موفقیت انجام شد"
+    
+    def get_object(self, queryset=None):
+        return Profile.objects.get(user=self.request.user)
+    
+    def form_invalid(self, form):
+        messages.error(self.request,"ارسال تصویر با مشکل مواجه شده لطفا مجدد بررسی و تلاش نمایید")
+        return redirect(self.success_url)
 
     
     
