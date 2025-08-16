@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView,UpdateView,ListView
+from django.views.generic import TemplateView,UpdateView,ListView,DeleteView,CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from django.contrib.auth import views as auth_views
@@ -86,3 +86,22 @@ class AdminProductEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessM
     
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:product-edit",kwargs={"pk":self.get_object().pk})
+
+class AdminProductDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    template_name = "dashboard/admin/products/product-delete.html"
+    queryset = ProductModel.objects.all()
+    success_url = reverse_lazy("dashboard:admin:product-list")
+    success_message = "حذف محصول با موفقیت انجام شد"
+
+class AdminProductCreateView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, CreateView):
+    template_name = "dashboard/admin/products/product-create.html"
+    queryset = ProductModel.objects.all()
+    form_class = ProductForm
+    success_message = "ایجاد محصول با موفقیت انجام شد"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+        
+    def get_success_url(self):
+        return reverse_lazy("dashboard:admin:product-list")

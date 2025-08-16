@@ -9,5 +9,7 @@ urlpatterns = [
     path("profile-edit/",views.AdminProfileEditView.as_view(),name="profile-edit"),
     path("profile/image/edit/",views.AdminProfileImageEditView.as_view(),name="profile-image-edit"),
     path("product/list/",views.AdminProductListView.as_view(),name="product-list"),
-    path("product/<int:pk>/edit/",views.AdminProductEditView.as_view(),name="product-edit")
+    path("product/<int:pk>/edit/",views.AdminProductEditView.as_view(),name="product-edit"),
+    path("product/<int:pk>/delete/",views.AdminProductDeleteView.as_view(),name="product-delete"),
+    path("product/create/",views.AdminProductCreateView.as_view(),name="product-create"),
 ]
