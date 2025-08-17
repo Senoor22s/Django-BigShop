@@ -14,5 +14,5 @@ class HasAdminAccessPermission(UserPassesTestMixin):
 
     def test_func(self):
         if self.request.user.is_authenticated:
-            return self.request.user.type == UserType.admin.value
+            return not self.request.user.type == UserType.customer.value
         return False

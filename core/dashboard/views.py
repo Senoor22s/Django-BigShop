@@ -10,7 +10,7 @@ class DashboardHomeView(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             if request.user.type == UserType.customer.value:
                 return redirect(reverse_lazy('dashboard:customer:home'))
-            elif request.user.type == UserType.admin.value:
+            elif not request.user.type == UserType.customer.value:
                 return redirect(reverse_lazy('dashboard:admin:home'))
         else:
             return redirect(reverse_lazy('accounts:login'))
