@@ -2,7 +2,7 @@ from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from accounts.models import Profile
-
+from order.models import UserAddressModel
 
 class CustomerPasswordChangeForm(auth_forms.PasswordChangeForm):
     error_messages = {
@@ -39,5 +39,21 @@ class CustomerProfileEditForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی را وارد نمایید'
         self.fields['phone_number'].widget.attrs['class'] = 'form-control text-center'
         self.fields['phone_number'].widget.attrs['placeholder'] = 'شماره همراه را وارد نمایید'
-        
+
+class UserAddressForm(forms.ModelForm):
+    class Meta:
+        model = UserAddressModel
+        fields= [
+            "address",
+            "state",
+            "city",
+            "zip_code",
+        ]
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['state'].widget.attrs['class'] = 'form-control '
+        self.fields['city'].widget.attrs['class'] = 'form-control '
+        self.fields['zip_code'].widget.attrs['class'] = 'form-control '
+        self.fields['address'].widget.attrs['class'] = 'form-control '        
         
