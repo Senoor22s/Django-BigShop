@@ -62,6 +62,11 @@ class ProductModel(models.Model):
     def is_published(self):
         return self.status == ProductStatusType.publish.value
     
+    def get_price(self):        
+        discount_amount = self.price * Decimal(self.discount_percent / 100)
+        discounted_amount = self.price - discount_amount
+        return round(discounted_amount)
+    
 class ProductImageModel(models.Model):
     product = models.ForeignKey("accounts.User",on_delete=models.CASCADE)
     file = models.ImageField(upload_to="product/extra-img/")
