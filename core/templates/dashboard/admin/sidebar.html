@@ -56,7 +56,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="./admin-account-support.html">
+              <a class="nav-link {% if request.resolver_match.view_name == 'dashboard:admin:ticket-list' %} active {% endif %}" href="{% url 'dashboard:admin:ticket-list' %}">
                 <i class="bi-envelope nav-icon"></i> تیکت ها
               </a>
             </li>
@@ -74,7 +74,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="./admin-account-newsletter.html">
+              <a class="nav-link {% if request.resolver_match.view_name == 'dashboard:admin:newsletter-list' %} active {% endif %}" href="{% url 'dashboard:admin:newsletter-list' %}">
                 <i class="bi-newspaper nav-icon"></i> خبرنامه
               </a>
             </li>

@@ -1,0 +1,53 @@
+{% extends 'dashboard/admin/base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb breadcrumb-light mb-0">
+        <li class="breadcrumb-item">حساب</li>
+        <li class="breadcrumb-item"> داشبورد</li>
+        <li class="breadcrumb-item active" aria-current="page">
+            خبرنامه 
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<!-- Card -->
+<div class="card">
+    <!-- Header -->
+    <div class="card-header border-bottom">
+      <h5 class="card-header-title">خبرنامه ها</h5>
+    </div>
+    <!-- End Header -->
+
+    <!-- Body -->
+    <div class="card-body">
+      <div class="row">
+        {% for object in object_list %}
+        <div class="col-sm-12 mb-3">
+          <div class="d-flex justify-content-between align-items-center border rounded p-3">
+            <!-- Info -->
+            <div>
+              <span class="h6 d-block mb-1">خبرنامه شماره - {{ object.id }}</span>
+              <span class="d-block text-muted">{{ object.email }}</span>
+            </div>
+
+            <!-- Delete Button -->
+            <a class="btn btn-danger btn-sm"
+               href="{% url 'dashboard:admin:newsletter-delete' pk=object.pk %}">
+              <i class="bi-trash me-1"></i> حذف
+            </a>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center">هیچ خبرنامه‌ای ثبت نشده است.</p>
+        {% endfor %}
+      </div>
+      <!-- End Row -->
+    </div>
+    <!-- End Body -->
+</div>
+<!-- End Card -->
+{% endblock %}

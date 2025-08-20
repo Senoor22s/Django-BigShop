@@ -8,9 +8,11 @@ from django.urls import reverse_lazy
 from accounts.models import Profile
 from django.shortcuts import redirect
 from django.contrib import messages
-from shop.models import ProductModel,ProductCategoryModel,ProductStatusType
+from shop.models import ProductModel,ProductCategoryModel
 from django.core.exceptions import FieldError
 from .forms import ProductForm
+from website.models import Newsletter,Contact
+from website.forms import ContactForm
 
 class AdminDashboardHomeView(LoginRequiredMixin,HasAdminAccessPermission,TemplateView):
     template_name = "dashboard/admin/home.html"
@@ -105,3 +107,34 @@ class AdminProductCreateView(LoginRequiredMixin, HasAdminAccessPermission, Succe
         
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:product-list")
+
+class NewsLetterListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
+    template_name = "dashboard/admin/newsletter/newsletter-list.html"
+    def get_queryset(self):
+        return Newsletter.objects.all().order_by("-id")
+
+class NewsLetterDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    model = Newsletter
+    template_name = "dashboard/admin/newsletter/newsletter-delete.html"
+    success_url = reverse_lazy("dashboard:admin:newsletter-list")
+    success_message = "حذف خبرنامه با موفقیت انجام شد"
+
+class TicketListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
+    template_name = "dashboard/admin/ticket/ticket-list.html"
+    def get_queryset(self):
+        return Contact.objects.all().order_by("-id")
+
+class TicketDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    model = Contact
+    template_name = "dashboard/admin/ticket/ticket-delete.html"
+    success_url = reverse_lazy("dashboard:admin:ticket-list")
+    success_message = "حذف تیکت با موفقیت انجام شد"
+
+class TicketEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin,UpdateView):
+    template_name = "dashboard/admin/ticket/ticket-edit.html"
+    queryset = Contact.objects.all()
+    form_class = ContactForm
+    success_message = "ویرایش تیکت با موفقیت انجام شد"
+
+    def get_success_url(self):
+        return reverse_lazy("dashboard:admin:ticket-edit",kwargs={"pk":self.get_object().pk})
