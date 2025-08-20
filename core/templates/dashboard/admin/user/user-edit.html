@@ -7,7 +7,7 @@
         <li class="breadcrumb-item">حساب</li>
         <li class="breadcrumb-item"> داشبورد</li>
         <li class="breadcrumb-item active" aria-current="page">
-            ویرایش تیکت
+            ویرایش کاربر
         </li>
     </ol>
 </nav>
@@ -17,7 +17,7 @@
 <!-- Card -->
 <div class="card mb-3">
     <div class="card-header border-bottom">
-        <h4 class="card-header-title">ویرایش تیکت </h4>
+        <h4 class="card-header-title">ویرایش کاربر </h4>
     </div>
 
     <form action="." method="post">
@@ -31,39 +31,46 @@
             <!-- Form -->
             <div class="row">
                 <div class="col-md-4  mb-4">
-                    <label class="col-form-label form-label">نام</label>
-                    {{form.name}}
+                    <label class="col-form-label form-label">ایمیل</label>
+                    {{form.user}}
                 </div>
                 <!-- End Form -->
                 <!-- Form -->
                 <div class="col-md-4  mb-4">
-                    <label class=" col-form-label form-label">شماره</label>
-                    {{form.phone_number}}
+                    <label class=" col-form-label form-label">نام</label>
+                    {{form.first_name}}
                 </div>
                 <!-- End Form -->
                 <!-- Form -->
                 <div class="col-md-4  mb-4">
-                    <label class=" col-form-label form-label">ایمیل</label>
-                    {{form.email}}
+                    <label class=" col-form-label form-label">نام خانوادگی</label>
+                    {{form.last_name}}
                 </div>
                 <!-- End Form -->
             </div>
             <!-- Form -->
             <div class="row mb-4">
-                <label class="col-form-label form-label">پیام</label>
-                {{form.message}}
+                <label class="col-form-label form-label">شماره</label>
+                {{form.phone_number}}
+            </div>
+            <div class="row mb-4">
+                <label class="col-form-label form-label" for="avatarUploader"> 
+                    <img id="avatarImg" 
+                    src="{{form.instance.image.url}}" 
+                    alt="Image Description"
+                    class="rounded-circle img-fluid" 
+                    style="width: 100px; height: 100px; object-fit: cover;">
+                </label>
             </div>
             <!-- End Form -->
-
-
         </div>
         <!-- End Body -->
 
         <!-- Footer -->
         <div class="card-footer pt-0">
             <div class="d-flex justify-content-end gap-3">
-                <a class="btn btn-danger" href="{% url 'dashboard:admin:ticket-delete' pk=object.pk %}">حذف</a>
-                <a class="btn btn-secondary" href="{% url 'dashboard:admin:ticket-list' %}">بازگشت</a>
+                <a class="btn btn-danger" href="{% url 'dashboard:admin:user-delete' pk=object.pk %}">حذف</a>
+                <a class="btn btn-secondary" href="{% url 'dashboard:admin:user-list' %}">بازگشت</a>
                 <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
             </div>
         </div>

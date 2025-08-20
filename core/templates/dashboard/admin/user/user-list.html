@@ -4,10 +4,10 @@
 {% block breadcrumb %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb breadcrumb-light mb-0">
-        <li class="breadcrumb-item">حساب</li>
-        <li class="breadcrumb-item"> داشبورد</li>
+        <li class="breadcrumb-item">حساب </li>
+        <li class="breadcrumb-item">داشبورد ادمین</li>
         <li class="breadcrumb-item active" aria-current="page">
-            خبرنامه 
+            کاربران
         </li>
     </ol>
 </nav>
@@ -18,20 +18,24 @@
 <div class="card">
     <!-- Header -->
     <div class="card-header border-bottom">
-      <h5 class="card-header-title">خبرنامه ها</h5>
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="">لیست کاربران</h5>
+        </div>
     </div>
     <!-- End Header -->
 
     <!-- Body -->
-     <div class="row m-1 py-0 ">
+    <div class="row m-1 py-0 ">
                 <div class="d-flex justify-content-start">
                     <div>
-                        {{total_newsletter}} خبرنامه
+                        {{total_users}} کاربر
                     </div>
                 </div>
     </div>
     <div class="card-body">
-      <form action="." class="row mb-5">
+
+        <div class="container pb-5">
+            <form action="." class="row">
                 <!-- End Input Card -->
                 <div class="col-md-2 py-1">
                     <label class="text-black" for="page-size-filter">صفحه بندی : 
@@ -45,29 +49,43 @@
                     </select>
                 </div>
             </form>
-      <div class="row">
-        {% for object in object_list %}
-        <div class="col-sm-12 mb-3">
-          <div class="d-flex justify-content-between align-items-center border rounded p-3">
-            <!-- Info -->
-            <div>
-              <span class="h6 d-block mb-1">خبرنامه شماره - {{ object.id }}</span>
-              <span class="d-block text-muted">{{ object.email }}</span>
-            </div>
 
-            <!-- Delete Button -->
-            <a class="btn btn-danger btn-sm"
-               href="{% url 'dashboard:admin:newsletter-delete' pk=object.pk %}">
-              <i class="bi-trash me-1"></i> حذف
-            </a>
-          </div>
         </div>
-        {% empty %}
-        <p class="text-muted text-center">هیچ خبرنامه‌ای ثبت نشده است.</p>
-        {% endfor %}
-      </div>
-      <!-- End Row -->
-       <!-- Pagination -->
+
+        <div class="row">
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">آیدی</th>
+                            <th scope="col">ایمیل</th>
+                            <th scope="col">نام کاربر</th>
+                            <th scope="col">شماره تلفن</th>
+                            <th scope="col">عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                            <th scope="row">{{object.id}}</th>
+                            <td>{{object.user}}</td>
+                            <td>{{object.get_fullname}}</td>
+                            <td>{{object.phone_number}}</td>
+                                <td class="d-flex">
+                                <a class="btn btn-sm btn-icon btn-ghost-secondary"
+                                    href="{% url 'dashboard:admin:user-edit' pk=object.pk %}"><i class="bi-pencil-square"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- End Table -->
+
+            <!-- Pagination -->
 
             <div class="row pt-5 mt-3">
                 {% if page_obj.has_other_pages %}
@@ -112,11 +130,19 @@
                 {% endif %}
                 <!-- End Pagination -->
             </div>
+            <!-- End Pagination -->
+
+
+
+        </div>
+        <!-- End Row -->
+
     </div>
     <!-- End Body -->
 </div>
 <!-- End Card -->
 {% endblock %}
+
 
 {% block extra_js %}
 <script>
@@ -132,7 +158,5 @@
         let new_url = window.location.pathname + "?" + current_url_params.toString()
         window.location.href = new_url
     });
-
 </script>
 {% endblock %}
-

@@ -23,7 +23,28 @@
     <!-- End Header -->
 
     <!-- Body -->
+     <div class="row m-1 py-0 ">
+                <div class="d-flex justify-content-start">
+                    <div>
+                        {{total_tickets}} تیکت
+                    </div>
+                </div>
+    </div>
     <div class="card-body">
+      <form action="." class="row mb-5">
+                <!-- End Input Card -->
+                <div class="col-md-2 py-1">
+                    <label class="text-black" for="page-size-filter">صفحه بندی : 
+                    <select class="form-select form-select-sm" id="page-size-filter" name="page_size">
+                        <option value="" selected>تعداد</option>
+                        <option value="4">4</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </form>
       <div class="row">
         {% for object in object_list %}
         <div class="col-sm-12 mb-3">
@@ -51,8 +72,72 @@
         {% endfor %}
       </div>
       <!-- End Row -->
+       <!-- Pagination -->
+
+            <div class="row pt-5 mt-3">
+                {% if page_obj.has_other_pages %}
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <button class="page-link" onclick="changePage(`{{ page_obj.previous_page_number }}`)"
+                                aria-label="Previous">
+                                <span aria-hidden="true">
+                                    <i class="bi-chevron-double-right small"></i>
+                                </span>
+                            </button>
+                        </li>
+                        {% endif %}
+                        {{page_obj.page_range}}
+                        {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %} <li class="page-item">
+                            <button class="page-link" onclick="changePage(`{{i}}`)">{{ i }}</button></li>
+
+                            {% endif %}
+
+                            {% endfor %}
+
+
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <button class="page-link" onclick="changePage(`{{ page_obj.next_page_number }}`)"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true">
+                                        <i class="bi-chevron-double-left small"></i>
+                                    </span>
+                                </button>
+                            </li>
+                            {% endif %}
+
+                    </ul>
+                </nav>
+                {% endif %}
+                <!-- End Pagination -->
+            </div>
+            <!-- End Pagination -->
     </div>
     <!-- End Body -->
 </div>
 <!-- End Card -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    $(document).ready(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        $("#page-size-filter").val(current_url_params.get("page_size") || "4")
+    });
+    $('#page-size-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("page_size", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+
+</script>
 {% endblock %}

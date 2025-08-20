@@ -13,6 +13,7 @@ from django.core.exceptions import FieldError
 from .forms import ProductForm
 from website.models import Newsletter,Contact
 from website.forms import ContactForm
+from accounts.forms import ProfileForm
 
 class AdminDashboardHomeView(LoginRequiredMixin,HasAdminAccessPermission,TemplateView):
     template_name = "dashboard/admin/home.html"
@@ -110,8 +111,18 @@ class AdminProductCreateView(LoginRequiredMixin, HasAdminAccessPermission, Succe
 
 class NewsLetterListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/newsletter/newsletter-list.html"
+    paginate_by = 5
+    
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get('page_size',self.paginate_by)
+
     def get_queryset(self):
         return Newsletter.objects.all().order_by("-id")
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["total_newsletter"] = self.get_queryset().count()
+        return context
 
 class NewsLetterDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     model = Newsletter
@@ -121,8 +132,18 @@ class NewsLetterDeleteView(LoginRequiredMixin, HasAdminAccessPermission, Success
 
 class TicketListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/ticket/ticket-list.html"
+    paginate_by = 4
+    
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get('page_size',self.paginate_by)
+    
     def get_queryset(self):
         return Contact.objects.all().order_by("-id")
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["total_tickets"] = self.get_queryset().count()
+        return context
 
 class TicketDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     model = Contact
@@ -138,3 +159,34 @@ class TicketEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessage
 
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:ticket-edit",kwargs={"pk":self.get_object().pk})
+
+class UserListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
+    template_name = "dashboard/admin/user/user-list.html"
+    paginate_by = 5
+    
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get('page_size',self.paginate_by)
+
+    def get_queryset(self):
+        return Profile.objects.all().order_by("-id")
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["total_users"] = self.get_queryset().count()
+        return context
+
+class UserDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    model = Profile
+    template_name = "dashboard/admin/user/user-delete.html"
+    success_url = reverse_lazy("dashboard:admin:user-list")
+    success_message = "حذف کاربر با موفقیت انجام شد"
+
+class UserEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin,UpdateView):
+    template_name = "dashboard/admin/user/user-edit.html"
+    queryset = Profile.objects.all()
+    form_class = ProfileForm
+    success_message = "ویرایش کاربر با موفقیت انجام شد"
+
+    def get_success_url(self):
+        return reverse_lazy("dashboard:admin:user-edit",kwargs={"pk":self.get_object().pk})
+

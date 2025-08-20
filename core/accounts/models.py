@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,post_delete
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -38,7 +38,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
     email = models.EmailField(_("email address"), unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -77,4 +76,8 @@ class Profile(models.Model):
 def create_profile(sender,instance,created,**kwargs):
     if created:
         Profile.objects.create(user=instance, pk=instance.pk)
-        
+
+@receiver(post_delete, sender=Profile)
+def delete_user(sender, instance, **kwargs):
+    if instance.user:
+        instance.user.delete()
