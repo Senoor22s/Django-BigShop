@@ -68,7 +68,7 @@ class ProductModel(models.Model):
         return round(discounted_amount)
     
 class ProductImageModel(models.Model):
-    product = models.ForeignKey("accounts.User",on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductModel,on_delete=models.CASCADE)
     file = models.ImageField(upload_to="product/extra-img/")
     
     created_date = models.DateTimeField(auto_now_add=True)
@@ -76,3 +76,15 @@ class ProductImageModel(models.Model):
     
     class Meta:
         ordering = ["-created_date"]
+
+class WishlistProductModel(models.Model):
+    user = models.ForeignKey("accounts.User",on_delete=models.PROTECT)
+    product = models.ForeignKey(ProductModel,on_delete=models.CASCADE,unique=True)
+
+    class Meta:
+        ordering = ["-id"]
+
+    def __str__(self):
+        return self.product.title
+    
+    

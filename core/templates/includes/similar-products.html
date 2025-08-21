@@ -3,10 +3,9 @@
 <div class="container content-space-2 content-space-lg-3">
     <!-- Title -->
     <div class="w-md-75 w-lg-50 text-center mx-md-auto mb-5 mb-md-9">
-        <h2>فقط برای شما</h2>
+        <h2>محصولات مشابه</h2>
     </div>
     <!-- End Title -->
-
     <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
         {% for similar_prodcut in similar_prodcuts %}
         <div class="col mb-4">
@@ -16,8 +15,8 @@
                     <img class="card-img-top" src="{{similar_prodcut.image.url}}" alt="Image Description">
                     {% if request.user.is_authenticated %}
                     <div class="card-pinned-top-end">
-                        <button type="button" class="btn btn-outline-secondary btn-xs btn-icon rounded-circle"
-                            data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به علایق">
+                        <button type="button" class="btn btn-outline-secondary btn-xs btn-icon rounded-circle {% if similar_prodcut.id in wishlist_items %} active {% endif %}"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به علایق" onclick="addToWishlist(this,`{{similar_prodcut.id}}`)">
                             <i class="bi-heart"></i>
                         </button>
                     </div>
@@ -39,11 +38,12 @@
                             href="{% url 'shop:product-detail' slug=similar_prodcut.slug %}">{{similar_prodcut.title}}</a>
                     </h4>
                     {% if similar_prodcut.is_discounted %}
-                    <p class="card-text text-dark fs-4">{{similar_prodcut.get_show_price}} تومان<span
-                            class="text-danger me-1 fs-6"><del>{{similar_prodcut.get_show_raw_price}} تومان</del></span>
+                    <p class="card-text text-dark fs-4">
+                        <span class="formatted-price">{{similar_prodcut.get_price}}</span> 
+                        <span class="text-body me-1 fs-6 formatted-price text-decoration-line-through">{{similar_prodcut.price}} </span>
                     </p>
                     {% else %}
-                    <p class="card-text text-dark fs-4"> {{similar_prodcut.get_show_raw_price}} تومان</p>
+                    <p class="card-text text-dark fs-4 formatted-price"> {{similar_prodcut.price}} </p>
                     {% endif %}
                 </div>
 
@@ -61,22 +61,9 @@
                     </a>
                     <!-- End Rating -->
 
-                    {% if request.user.is_authenticated %}
-                        <button type="button"
-                            class="btn btn-outline-primary btn-sm btn-transition rounded-pill"
-                            onclick="addToCart('{{ similar_prodcut.id }}')">
-                            افزودن به سبد خرید
-                        </button>
-                    {% else %}
-                        <button type="button"
-                            class="btn btn-outline-primary btn-sm btn-transition rounded-pill"
-                            onclick="window.location.href='{% url "accounts:login" %}'">
-                            افزودن به سبد خرید
-                        </button>
-                    {% endif %}
-                    <button type="button"
-                                class="btn btn-outline-primary btn-sm btn-transition rounded-pill"><a href="{% url 'shop:product-detail' slug=similar_prodcut.slug %}">مشاهده محصول</a></button>
-
+                    <button type="button" class="btn btn-outline-primary btn-sm btn-transition rounded-pill" onclick="addToCart('{{similar_prodcut.id}}')">افزودن به
+                        سبد
+                        خرید</button>
                 </div>
             </div>
             <!-- End Card -->

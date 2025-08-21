@@ -15,4 +15,6 @@ urlpatterns = [
     path("order/list/",views.CustomerOrderListView.as_view(),name="order-list"),
     path("order/<int:pk>/detail/",views.CustomerOrderDetailView.as_view(),name="order-detail"),
     path("order/<int:pk>/invoice/",views.CustomerOrderInvoiceView.as_view(),name="order-invoice"),
+    path("wishlist/list/",views.CustomerWishlistListView.as_view(),name="wishlist-list"),
+    path("wishlist/<int:pk>/delete/",views.CustomerWishlistDeleteView.as_view(),name="wishlist-delete"),
 ]
