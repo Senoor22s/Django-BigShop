@@ -79,12 +79,11 @@ class ProductImageModel(models.Model):
 
 class WishlistProductModel(models.Model):
     user = models.ForeignKey("accounts.User",on_delete=models.PROTECT)
-    product = models.ForeignKey(ProductModel,on_delete=models.CASCADE,unique=True)
+    product = models.ForeignKey(ProductModel,on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["-id"]
 
     def __str__(self):
         return self.product.title
-    
     
