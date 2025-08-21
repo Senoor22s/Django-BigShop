@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.views.generic import (
     TemplateView,
     FormView,
@@ -8,8 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasCustomerAccessPermission
 from order.models import UserAddressModel
 from order.forms import CheckOutForm
-from cart.models import CartModel, CartItemModel
-from order.models import OrderModel, OrderItemModel
+from cart.models import CartModel
+from order.models import OrderModel, OrderItemModel,OrderStatusType
 from django.urls import reverse_lazy
 from cart.cart import CartSession
 from decimal import Decimal
@@ -42,6 +41,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
+        order.status = OrderStatusType.success.value
         order.save()
         return super().form_valid(form)
 
