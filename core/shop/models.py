@@ -30,6 +30,7 @@ class ProductModel(models.Model):
     image = models.ImageField(default="/default/product-image.png",upload_to="product/img/")
     description = models.TextField()
     brief_description = models.TextField(null=True,blank=True)
+    avg_rate = models.FloatField(default=0.0)
     stock = models.PositiveIntegerField(default=0)
     status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.draft.value)
     price = models.DecimalField(default=0,max_digits=10,decimal_places=0)
