@@ -3,7 +3,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from accounts.models import Profile
 from shop.models import ProductModel
-
+from review.models import ReviewModel
 
 class AdminPasswordChangeForm(auth_forms.PasswordChangeForm):
     error_messages = {
@@ -13,7 +13,6 @@ class AdminPasswordChangeForm(auth_forms.PasswordChangeForm):
         "password_mismatch": _("دو پسورد ورودی با همدیگر مطابقت ندارند"),
     }
     
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['old_password'].widget.attrs['class'] = 'form-control text-center'
@@ -31,6 +30,7 @@ class AdminProfileEditForm(forms.ModelForm):
             "last_name",
             "phone_number"
         ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
@@ -55,6 +55,7 @@ class ProductForm(forms.ModelForm):
             "price",
             "discount_percent",
         ]
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['class'] = 'form-control'
@@ -68,4 +69,18 @@ class ProductForm(forms.ModelForm):
         self.fields['status'].widget.attrs['class'] = 'form-select'
         self.fields['price'].widget.attrs['class'] = 'form-control'
         self.fields['discount_percent'].widget.attrs['class'] = 'form-control'
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = ReviewModel
+        fields = [
+            "description",
+            "rate",
+            "status",
+        ] 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['rate'].widget.attrs['class'] = 'form-control '
+        self.fields['status'].widget.attrs['class'] = 'form-select'
     
