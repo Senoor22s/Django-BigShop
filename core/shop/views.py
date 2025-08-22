@@ -9,6 +9,8 @@ from django.core.exceptions import FieldError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from review.models import ReviewModel,ReviewStatusType
+from django.db.models import Count
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class ShopProductGridView(ListView):
@@ -45,17 +47,36 @@ class ShopProductGridView(ListView):
         return context
 
 
+
 class ShopProductDetailView(DetailView):
     template_name = "shop/product-detail.html"
-    queryset = ProductModel.objects.filter(
-        status=ProductStatusType.publish.value)
+    queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        context["is_wished"] = WishlistProductModel.objects.filter(
-            user=self.request.user, product__id=self.get_object().id).exists() if self.request.user.is_authenticated else False
-        context["reviews"] = ReviewModel.objects.filter(product=product,status=ReviewStatusType.accepted.value)
+        all_reviews = ReviewModel.objects.filter(product=product, status=ReviewStatusType.accepted.value)
+
+        star_counts = all_reviews.values('rate').annotate(count=Count('id'))
+        star_dict = {i: 0 for i in range(1,6)}
+        for item in star_counts:
+            star_dict[item['rate']] = item['count']
+
+        total_reviews = all_reviews.count()
+        star_percent = {i: (star_dict[i] / total_reviews * 100 if total_reviews else 0) for i in range(1,6)}
+
+        paginator = Paginator(all_reviews, 3)
+        page_number = self.request.GET.get('page')
+        reviews = paginator.get_page(page_number)
+
+        context.update({
+            "reviews": reviews,               
+            "star_dict": star_dict,          
+            "star_percent": star_percent,  
+            "total_reviews": total_reviews,   
+            "is_wished": WishlistProductModel.objects.filter(
+                user=self.request.user, product__id=product.id).exists() if self.request.user.is_authenticated else False,
+        })
         return context
 
 

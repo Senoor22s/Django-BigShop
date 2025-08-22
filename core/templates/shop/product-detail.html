@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load shop_tags %}
-
-
 {% block content %}
 
 <!-- Hero -->
@@ -66,12 +64,14 @@
         <div class="col-md-5">
             <!-- Rating -->
             <a class="d-flex gap-1 mb-4" href="#reviewSection">
-                <img src="{% static 'svg/illustrations/star.svg' %}" alt="Review rating" width="16">
-                <img src="{% static 'svg/illustrations/star.svg' %}" alt="Review rating" width="16">
-                <img src="{% static 'svg/illustrations/star.svg' %}" alt="Review rating" width="16">
-                <img src="{% static 'svg/illustrations/star.svg' %}" alt="Review rating" width="16">
-                <img src="{% static 'svg/illustrations/star.svg' %}" alt="Review rating" width="16">
-                <span class="ms-1">287 نظر</span>
+                {% for i in "12345" %}
+                    {% if i|add:0 <= object.avg_rate %}
+                        <span><i class="bi bi-star-fill star-rate"></i></span>
+                    {% else %}
+                        <span><i class="bi bi-star star-rate"></i></span>
+                    {% endif %}
+                {% endfor %}
+                <span class="ms-1">{{ object.avg_rate }}/5</span>
             </a>
             <!-- End Rating -->
 
@@ -208,7 +208,7 @@
                 </div>
                 <div class="flex-grow-1 ms-2">
                     <span class="small me-1">نیاز به پشتیبانی دارید؟</span>
-                    <a class="link small" href="#">ارسال تیکت</a>
+                    <a class="link small" href="{% url 'website:contact' %}">ارسال تیکت</a>
                 </div>
             </div>
             <!-- End Media -->
@@ -232,233 +232,155 @@
 <!-- Review Section -->
 <div id="reviewSection" class="container content-space-b-2 content-space-b-lg-3">
     <div class="row">
+        <!-- Left Col: Ratings Summary -->
         <div class="col-md-4 mb-7 mb-md-0">
             <div class="border-bottom pb-4 mb-4">
-                <!-- Card -->
                 <div class="card bg-primary mb-3">
                     <div class="card-body">
-                        <!-- Media -->
                         <div class="d-flex justify-content-center">
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0">
-                                    <span class="display-4 text-white">{{object.avg_rate}}</span>
+                                    <span class="display-4 text-white">{{ object.avg_rate }}</span>
                                 </div>
-
                                 <div class="flex-grow-1 me-3">
-                                    <!-- Rating -->
                                     <div class="d-flex gap-1 small">
                                         {% for i in "12345" %}
                                             {% if i|add:0 <= object.avg_rate %}
-                                            <span><i class="bi bi-star-fill star-rate"></i></span>
+                                                <span><i class="bi bi-star-fill star-rate"></i></span>
                                             {% else %}
-                                            <span><i class="bi bi-star star-rate"></i></span>
+                                                <span><i class="bi bi-star star-rate"></i></span>
                                             {% endif %}
-
                                         {% endfor %}
                                     </div>
-                                    <!-- End Rating -->
-                                    <span class="text-white">{{reviews.count}} نظر</span>
+                                    <span class="text-white">{{ total_reviews }} نظر</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- End Media -->
                     </div>
                 </div>
-                <!-- End Card -->
 
                 <h3>تجزیه رتبه</h3>
-
-                <!-- Ratings -->
                 <div class="d-grid gap-1">
+                    {% for i in "54321" %}
                     <a class="row align-items-center" href="#" style="max-width: 25rem;">
                         <div class="col-3">
-                            <span class="text-dark">5 ستاره</span>
+                            <span class="text-dark">{{ i }} ستاره</span>
                         </div>
-                        <!-- End Col -->
-
                         <div class="col-7">
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ star_percent|get_item:i }}%;"
+                                    aria-valuenow="{{ star_percent|get_item:i }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
                             </div>
                         </div>
-                        <!-- End Col -->
-
                         <div class="col-2 text-end">
-                            <span>205</span>
+                            <span>{{ star_dict|get_item:i }}</span>
                         </div>
-                        <!-- End Col -->
                     </a>
-                    <!-- End Row -->
-
-                    <a class="row align-items-center" href="#" style="max-width: 25rem;">
-                        <div class="col-3">
-                            <span class="text-dark">4 ستاره</span>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-7">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: 53%;" aria-valuenow="53"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-2 text-end">
-                            <span>55</span>
-                        </div>
-                        <!-- End Col -->
-                    </a>
-                    <!-- End Row -->
-
-                    <a class="row align-items-center" href="#" style="max-width: 25rem;">
-                        <div class="col-3">
-                            <span class="text-dark">3 ستاره</span>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-7">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: 20%;" aria-valuenow="20"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-2 text-end">
-                            <span>23</span>
-                        </div>
-                        <!-- End Col -->
-                    </a>
-                    <!-- End Row -->
-
-                    <a class="row align-items-center" href="#" style="max-width: 25rem;">
-                        <div class="col-3">
-                            <span class="text-dark">2 ستاره</span>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-7">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-2 text-end">
-                            <span>0</span>
-                        </div>
-                        <!-- End Col -->
-                    </a>
-                    <!-- End Row -->
-
-                    <a class="row align-items-center" href="#" style="max-width: 25rem;">
-                        <div class="col-3">
-                            <span class="text-dark">1 ستاره</span>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-7">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: 1%;" aria-valuenow="1"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-2 text-end">
-                            <span>4</span>
-                        </div>
-                        <!-- End Col -->
-                    </a>
-                    <!-- End Row -->
+                    {% endfor %}
                 </div>
-                <!-- End Ratings -->
             </div>
         </div>
-        <!-- End Col -->
+        <!-- End Left Col -->
 
+        <!-- Right Col: Reviews List -->
         <div class="col-md-8">
             <div class="ps-md-4">
-                <!-- Heading -->
                 <div class="border-bottom pb-4 mb-4">
                     <div class="row align-items-center">
                         <div class="col-sm mb-2 mb-sm-0">
                             <h4 class="mb-0">دیدگاه ها</h4>
                         </div>
-
                         <div class="col-sm-auto mb-2 text-center">
                             <button type="button" class="btn btn-primary btn-transition rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#submitReviewModal">
                                 ثبت دیدگاه</button>
                         </div>
-                        <!-- End Col -->
                     </div>
-                    <!-- End Row -->
                 </div>
-                <!-- End Heading -->
 
-                <!-- Comment -->
                 <ul class="list-comment list-comment-divider mb-5">
-                    <!-- Item -->
                     {% for review in reviews %}
                     <li class="list-comment-item">
                         <div class="d-flex gap-1 mb-3">
                             {% for i in "12345" %}
                                 {% if i|add:0 <= review.rate %}
-                                <span><i class="bi bi-star-fill star-rate"></i></span>
+                                    <span><i class="bi bi-star-fill star-rate"></i></span>
                                 {% else %}
-                                <span><i class="bi bi-star star-rate"></i></span>
+                                    <span><i class="bi bi-star star-rate"></i></span>
                                 {% endif %}
-
                             {% endfor %}
-        
                         </div>
 
-                        <!-- Media -->
                         <div class="d-flex align-items-center mb-3">
                             <div class="flex-shrink-0">
-                                <img class="avatar avatar-sm avatar-circle" src="{{review.user.user_profile.image.url}}"
-                                    alt="Image Description">
+                                <img class="avatar avatar-sm avatar-circle" src="{{ review.user.user_profile.image.url }}" alt="Image Description">
                             </div>
-
                             <div class="flex-grow-1 me-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">{{review.user.user_profile.get_fullname}}</h5>
-                                    <span class="d-block small text-muted">
-                                        {{review.created_date|date:"Y-m-d h:i"}}</span>
+                                    <h5 class="mb-0">{{ review.user.user_profile.get_fullname }}</h5>
+                                    <span class="d-block small text-muted">{{ review.created_date|date:"Y-m-d-h:i" }}</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- End Media -->
 
                         <div class="mb-5">
-                            <p>{{review.description}}</p>
+                            <p>{{ review.description }}</p>
                         </div>
-
-
-                        <!-- End Media -->
                     </li>
-                    <!-- End Item -->
                     {% empty %}
                     <div class="row text-center w-100 py-5">
                         <p class="text-center">هیچ نظری هنوز ثبت نشده است</p>
                     </div>
                     {% endfor %}
-
                 </ul>
-                <!-- End Comment -->
 
+                <!-- Pagination -->
+                {% if reviews.has_other_pages %}
+                <nav aria-label="Comment pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if reviews.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ reviews.previous_page_number }}#reviewSection" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                        {% endif %}
 
+                        {% for num in reviews.paginator.page_range %}
+                            {% if reviews.number == num %}
+                            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ num }}#reviewSection">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if reviews.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ reviews.next_page_number }}#reviewSection" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                <!-- End Pagination -->
             </div>
         </div>
-        <!-- End Col -->
+        <!-- End Right Col -->
     </div>
-    <!-- End Row -->
 </div>
 <!-- End Review Section -->
+
 
 <!-- Subscribe -->
 <div class="bg-light">

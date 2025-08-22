@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
+from django.db.models import Avg
 
 class ProductStatusType(models.IntegerChoices):
     publish = 1, _("نمایش")
@@ -30,7 +31,6 @@ class ProductModel(models.Model):
     image = models.ImageField(default="/default/product-image.png",upload_to="product/img/")
     description = models.TextField()
     brief_description = models.TextField(null=True,blank=True)
-    avg_rate = models.FloatField(default=0.0)
     stock = models.PositiveIntegerField(default=0)
     status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.draft.value)
     price = models.DecimalField(default=0,max_digits=10,decimal_places=0)
@@ -41,6 +41,11 @@ class ProductModel(models.Model):
     
     class Meta:
         ordering = ["-created_date"]
+    
+    def avg_rate(self):
+        from review.models import ReviewStatusType
+        avg = self.reviews.filter(status=ReviewStatusType.accepted.value).aggregate(avg=Avg("rate"))["avg"] or 0
+        return round(avg, 1)
         
     def __str__(self):
         return self.title
@@ -67,6 +72,7 @@ class ProductModel(models.Model):
         discount_amount = self.price * Decimal(self.discount_percent / 100)
         discounted_amount = self.price - discount_amount
         return round(discounted_amount)
+    
     
 class ProductImageModel(models.Model):
     product = models.ForeignKey(ProductModel,on_delete=models.CASCADE)

@@ -21,3 +21,11 @@ def show_similar_products(context,product):
         status=ProductStatusType.publish.value,category__in=product_categories).distinct().exclude(id=product.id).order_by("-created_date")[:4]
     wishlist_items =  WishlistProductModel.objects.filter(user=request.user).values_list("product__id",flat=True) if request.user.is_authenticated else []
     return {"similar_prodcuts": similar_prodcuts,"request":request,"wishlist_items":wishlist_items}
+
+@register.filter
+def get_item(dictionary, key):
+    try:
+        key = int(key)
+        return dictionary.get(key, 0)
+    except:
+        return 0

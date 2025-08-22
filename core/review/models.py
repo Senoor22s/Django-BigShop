@@ -2,9 +2,9 @@ from django.db import models
 from shop.models import ProductModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,post_delete
 from django.utils.translation import gettext_lazy as _
-
+from django.db.models import Avg
 
 class ReviewStatusType(models.IntegerChoices):
     pending = 1, _("در انتظار تایید")
@@ -14,7 +14,7 @@ class ReviewStatusType(models.IntegerChoices):
 
 class ReviewModel(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
-    product = models.ForeignKey('shop.ProductModel',on_delete=models.CASCADE)
+    product = models.ForeignKey('shop.ProductModel',on_delete=models.CASCADE ,related_name="reviews")
     description = models.TextField()
     rate = models.IntegerField(default=5, validators=[
                                MinValueValidator(0), MaxValueValidator(5)])
@@ -36,6 +36,3 @@ class ReviewModel(models.Model):
             "label":ReviewStatusType(self.status).label,
         }
     
-@receiver(post_save,sender=ReviewModel)
-def calculate_avg_review(sender,instance,created,**kwargs):
-    pass
