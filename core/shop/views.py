@@ -10,9 +10,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from review.models import ReviewModel,ReviewStatusType
 from django.db.models import Count
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
-
+@method_decorator(cache_page(60), name='dispatch')
 class ShopProductGridView(ListView):
     template_name = "shop/product-grid.html"
     paginate_by = 9
@@ -45,8 +47,6 @@ class ShopProductGridView(ListView):
             "product__id", flat=True) if self.request.user.is_authenticated else []
         context["categories"] = ProductCategoryModel.objects.all()
         return context
-
-
 
 class ShopProductDetailView(DetailView):
     template_name = "shop/product-detail.html"

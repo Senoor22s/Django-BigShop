@@ -29,3 +29,10 @@ def get_item(dictionary, key):
         return dictionary.get(key, 0)
     except:
         return 0
+
+@register.inclusion_tag("includes/recent-products.html",takes_context=True)
+def show_recent_products(context):
+    request = context.get("request")
+    recent_products = ProductModel.objects.filter(
+        status=ProductStatusType.publish.value).distinct().order_by("-created_date")[:3]
+    return {"recent_products": recent_products,"request":request}
