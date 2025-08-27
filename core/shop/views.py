@@ -11,10 +11,7 @@ from django.http import JsonResponse
 from review.models import ReviewModel,ReviewStatusType
 from django.db.models import Count
 from django.core.paginator import Paginator
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 
-@method_decorator(cache_page(60), name='dispatch')
 class ShopProductGridView(ListView):
     template_name = "shop/product-grid.html"
     paginate_by = 9
@@ -95,5 +92,5 @@ class AddOrRemoveWishlistView(LoginRequiredMixin, View):
                 WishlistProductModel.objects.create(
                     user=request.user, product_id=product_id)
                 message = "محصول به لیست علایق اضافه شد"
-
+        
         return JsonResponse({"message": message})

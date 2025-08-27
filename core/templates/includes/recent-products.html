@@ -1,57 +1,60 @@
 {% load static %}
 <!-- Slide -->
-            {% for recent_product in recent_products %}
-            <div class="swiper-slide">
-                <!-- Container -->
-                <div class="container content-space-t-2 content-space-b-3">
-                    
-                    <div class="row align-items-lg-center">
-                        <div class="col-lg-5 order-lg-2 mb-7 mb-lg-0">
-                            <div class="mb-6">
-                                <h1 class="display-4 mb-4">{{recent_product.title}}</h1>
-                                <p>{{recent_product.brief_description}}</p>
-                            </div>
-
-                            <div class="d-flex gap-2">
-                                <a class="btn btn-primary rounded-pill" href="{% url 'shop:product-detail' slug=recent_product.slug %}">نمایش جزئیات محصول</a>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-lg-6 order-lg-1">
-                            <div class="w-75 mx-auto">
-                                <img class="img-fluid rounded-circle" src="{{recent_product.image.url}}" alt="Image Description">
-
-                            </div>
-                        </div>
-                        <!-- End Col -->
-                    </div>
-                    <!-- End Row -->
+{% for recent_product in recent_products %}
+<div class="swiper-slide">
+    <div class="container content-space-t-2 content-space-b-3">
+        <div class="row align-items-lg-center">
+            <!-- متن محصول -->
+            <div class="col-lg-5 order-lg-2 mb-7 mb-lg-0">
+                <div class="mb-6">
+                    <h1 class="display-4 mb-3">{{ recent_product.title }}</h1>
+                    <p class="lead">{{ recent_product.brief_description }}</p>
                 </div>
-                <!-- End Container -->
-            </div>
-            <!-- End Slide -->
-             {% endfor %}
-
-        </div>
-        <!-- Arrows -->
-        <div class="js-swiper-shop-classic-hero-button-prev swiper-button-prev"></div>
-        <div class="js-swiper-shop-classic-hero-button-next swiper-button-next"></div>
-    </div>
-    <!-- End Swiper Main Slider -->
-
-    <!-- Swiper Thumbs Slider -->
-    <div class="position-absolute bottom-0 start-0 end-0 mb-3">
-        <div class="js-swiper-shop-hero-thumbs swiper" style="max-width: 13rem;">
-            <div class="swiper-wrapper">
-                <!-- Slide -->
-                 {% for recent_product in recent_products %}
-                <div class="swiper-slide">
-                    <a class="js-swiper-thumb-progress swiper-thumb-progress-avatar" href="javascript:;" tabindex="0">
-                        <img class="swiper-thumb-progress-avatar-img" src="{{recent_product.image.url}}"
-                            alt="Image Description">
+                <div class="d-flex gap-2">
+                    <a class="btn btn-primary rounded-pill px-4" href="{% url 'shop:product-detail' slug=recent_product.slug %}">
+                        نمایش جزئیات محصول
                     </a>
                 </div>
-                <!-- End Slide -->
-                 {% endfor %}
             </div>
+
+            <!-- تصویر محصول -->
+            <div class="col-lg-6 order-lg-1 position-relative">
+                <div class="w-100 position-relative">
+                    <img class="img-fluid rounded-circle shadow-lg" src="{{ recent_product.image.url }}" alt="Image Description">
+
+                    <!-- کارت قیمت حرفه‌ای -->
+                    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3 p-2 px-3 rounded-3 bg-white bg-opacity-90 shadow d-flex align-items-center justify-content-center gap-2 flex-nowrap" style="min-width: 180px; max-width: 90%;">
+                    {% if recent_product.is_discounted %}
+                        <span class="fs-6 fw-bold text-danger text-truncate">{{ recent_product.get_show_price }} تومان</span>
+                        <span class="fs-6 text-muted text-decoration-line-through text-truncate">{{ recent_product.get_show_raw_price }} تومان</span>
+                        <span class="badge bg-danger text-white rounded-pill">٪{{ recent_product.discount_percent }}</span>
+                    {% else %}
+                        <span class="fs-6 fw-bold text-dark text-truncate">{{ recent_product.get_show_raw_price }} تومان</span>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+</div>
+<!-- Arrows -->
+<div class="js-swiper-shop-classic-hero-button-prev swiper-button-prev"></div>
+<div class="js-swiper-shop-classic-hero-button-next swiper-button-next"></div>
+
+<!-- Swiper Thumbs Slider -->
+<div class="position-absolute bottom-0 start-0 end-0 mb-3">
+    <div class="js-swiper-shop-hero-thumbs swiper" style="max-width: 13rem;">
+        <div class="swiper-wrapper">
+            {% for recent_product in recent_products %}
+            <div class="swiper-slide">
+                <a class="js-swiper-thumb-progress swiper-thumb-progress-avatar" href="javascript:;" tabindex="0">
+                    <img class="swiper-thumb-progress-avatar-img rounded-circle border border-2 border-white shadow-sm" src="{{ recent_product.image.url }}" alt="Image Description">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
